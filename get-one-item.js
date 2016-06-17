@@ -2,11 +2,11 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 
-app.get('/:id', function (req, res) {
+app.get('/:id', function (req, res, next) {
     var id = req.params.id;
 
     fs.readFile('./items.json', 'UTF-8', function (err, items) {
-        if (err) throw err;
+        if (err) return next(err);
 
         items = JSON.parse(items);
         var position = findPosition(items, JSON.parse(id));

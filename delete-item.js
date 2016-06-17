@@ -5,11 +5,11 @@ var bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-app.delete('/:id', function (req, res) {
+app.delete('/:id', function (req, res, next) {
     var id = req.params.id;
 
     fs.readFile('./items.json', 'UTF-8', function (err, items) {
-        if (err) throw err;
+        if (err) return next(err);
 
         items = JSON.parse(items);
         var position = findPosition(items, JSON.parse(id));
@@ -38,5 +38,10 @@ function deleteItem(items, position) {
     items.splice(position, 1);
     fs.writeFile('./items.json', JSON.stringify(items));
 }
+
+app.use(function (err, req, res, next) {
+    console.error(err);
+    res.status(500).send('Some errors happened, please see the log on server');
+});
 
 module.exports = app;

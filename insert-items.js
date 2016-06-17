@@ -5,10 +5,10 @@ var bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-app.post('/', function (req, res) {
+app.post('/', function (req, res, next) {
     var data = receiveData(req);
     if (isCorrectDataType(data)) {
-        insertItem(data);
+        insertItem(data, next);
         res.status(201).json(data);
 
     }
@@ -39,12 +39,17 @@ function isCorrectDataType(data) {
 function insertItem(data) {
     data.id = id++;
     fs.readFile('./items.json', 'UTF-8', function (err, items) {
-        if (err) throw err;
+        if (err) return next(err);
 
         items = JSON.parse(items);
         items.splice(items.length, 0, data);
         fs.writeFile('./items.json', JSON.stringify(items));
     });
 }
+
+app.use(function (err, req, res, next) {
+    console.error(err);
+    res.status(500).send('Some errors happened, please see the log on server');
+});
 
 module.exports = app;

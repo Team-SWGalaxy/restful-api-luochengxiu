@@ -5,10 +5,10 @@ var bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-app.put('/:id', function (req, res) {
+app.put('/:id', function (req, res, next) {
     var id = req.params.id; 
     fs.readFile('./items.json', 'UTF-8', function (err, fileContent) {
-        if (err) throw err;
+        if (err) return next(err);
 
         var items = JSON.parse(fileContent);
         var position = findItem(items, parseInt(id));
@@ -60,7 +60,6 @@ function isCorrectDataType(data) {
 
 function updateItems(items,position,data) {
     items[position] = updated(items[position], data);
-    // fs.writeFile('./items.json', JSON.stringify(items));
     writeFile(items);
     return items[position];
 }
@@ -77,5 +76,10 @@ function updated(item, data) {
 function writeFile(items) {
     fs.writeFile('./items.json', JSON.stringify(items));
 }
+
+app.use(function (err, req, res, next) {
+    console.error(err);
+    res.status(500).send('Some errors happened, please see the log on server');
+});
 
 module.exports = app;
