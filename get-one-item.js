@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
+var _ = require('lodash');
 
 app.get('/:id', function (req, res, next) {
     var id = req.params.id;
@@ -9,8 +10,10 @@ app.get('/:id', function (req, res, next) {
         if (err) return next(err);
 
         items = JSON.parse(items);
-        var position = findPosition(items, JSON.parse(id));
-        if (position === null) {
+        var position = _.findIndex(items, function (item) {
+            return item.id === parseInt(req.params.id);
+        });
+        if (position === -1) {
             res.status(404).end();
         }
         else {
@@ -18,15 +21,5 @@ app.get('/:id', function (req, res, next) {
         }
     });
 });
-
-function findPosition(items, id) {
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].id === id) {
-
-            return i;
-        }
-    }
-    return null;
-}
 
 module.exports = app;
