@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var bodyParser = require('body-parser');
+var _ = require('lodash');
 
 app.use(bodyParser.json());
 
@@ -11,9 +12,11 @@ app.delete('/:id', function (req, res, next) {
         if (err) return next(err);
 
         items = JSON.parse(data);
-        var position = findPosition(items, parseInt(req.params.id));
+        var position = _.findIndex(items, function (item) {
+            return item.id === parseInt(req.params.id);
+        });
 
-        if (position === null) {
+        if (position === -1) {
             res.status(404).end();
         }
         else {
@@ -22,16 +25,6 @@ app.delete('/:id', function (req, res, next) {
         }
     });
 });
-
-function findPosition(items, id) {
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].id === id) {
-
-            return i;
-        }
-    }
-    return null;
-}
 
 function deleteItem(items, position) {
     items.splice(position, 1);
