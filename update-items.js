@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var bodyParser = require('body-parser');
+var _ = require('lodash');
 
 app.use(bodyParser.json());
 
@@ -11,9 +12,11 @@ app.put('/:id', function (req, res, next) {
         if (err) return next(err);
 
         var items = JSON.parse(fileContent);
-        var position = findItem(items, parseInt(id));
+        var position = _.findIndex(items, function (item) {
+            return item.id === parseInt(req.params.id);
+        });
 
-        var itemNotFound = position === null;
+        var itemNotFound = position === -1;
         if (itemNotFound) {
             res.status(404).end();
         }
