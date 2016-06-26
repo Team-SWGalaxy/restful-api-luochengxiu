@@ -2,8 +2,6 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 
-global.id = 1;
-
 var insertItems = require('./insert-items');
 var getAllItems = require('./get-all-items');
 var getOneItem = require('./get-one-item');
@@ -26,6 +24,8 @@ app.use('/items', getOneItem);
 app.use('/items', deleteItem);
 app.use('/items', updateItem);
 
-app.listen(8080);
+app.listen(3000, function () {
+    console.log('server started at port 3000');
+});
 
 module.exports = app;
