@@ -4,8 +4,6 @@ var fs = require('fs');
 var _ = require('lodash');
 
 app.get('/:id', function (req, res, next) {
-    var id = req.params.id;
-
     fs.readFile('./items.json', 'UTF-8', function (err, items) {
         if (err) return next(err);
 
