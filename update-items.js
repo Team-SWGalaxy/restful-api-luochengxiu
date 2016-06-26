@@ -7,7 +7,6 @@ var _ = require('lodash');
 app.use(bodyParser.json());
 
 app.put('/:id', function (req, res, next) {
-    var id = req.params.id; 
     fs.readFile('./items.json', 'UTF-8', function (err, fileContent) {
         if (err) return next(err);
 
@@ -33,22 +32,13 @@ app.put('/:id', function (req, res, next) {
     });
 });
 
-function findItem(items, id) {
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].id === id) {
-            return i;
-        }
-    }
-    return null;
-}
-
 function receiveData(req) {
     return {
-            "barcode": req.body.barcode,
-            "name": req.body.name,
-            "price": req.body.price,
-            "unit": req.body.unit
-        };
+        "barcode": req.body.barcode,
+        "name": req.body.name,
+        "price": req.body.price,
+        "unit": req.body.unit
+    };
 }
 
 function isCorrectDataType(data) {
