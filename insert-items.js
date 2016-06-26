@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var bodyParser = require('body-parser');
+var nextId = require('./next-id');
 
 app.use(bodyParser.json());
 
@@ -37,7 +38,7 @@ function isCorrectDataType(data) {
 }
 
 function insertItem(data) {
-    data.id = id++;
+    data.id = nextId();
     fs.readFile('./items.json', 'UTF-8', function (err, items) {
         if (err) return next(err);
 
