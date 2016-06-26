@@ -6,13 +6,12 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 app.delete('/:id', function (req, res, next) {
-    var id = req.params.id;
 
-    fs.readFile('./items.json', 'UTF-8', function (err, items) {
+    fs.readFile('./items.json', 'UTF-8', function (err, data) {
         if (err) return next(err);
 
-        items = JSON.parse(items);
-        var position = findPosition(items, JSON.parse(id));
+        items = JSON.parse(data);
+        var position = findPosition(items, parseInt(req.params.id));
 
         if (position === null) {
             res.status(404).end();
