@@ -20,7 +20,7 @@ app.delete('/:id', function (req, res, next) {
             res.status(404).end();
         }
         else {
-            deleteItem(items,position);
+            deleteItem(items, position);
             res.status(204).end();
         }
     });
